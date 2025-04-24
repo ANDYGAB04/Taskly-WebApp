@@ -1,19 +1,18 @@
-import React from 'react'
+import clsx from "clsx";
+import moment from "moment";
+import React from 'react';
+import { FaClipboard, FaNewspaper } from "react-icons/fa";
+import { FaArrowsToDot } from "react-icons/fa6";
 import {
   MdAdminPanelSettings,
   MdKeyboardArrowDown,
   MdKeyboardArrowUp,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
-import { FaClipboard, FaNewspaper, FaUsers } from "react-icons/fa";
-import { FaArrowsToDot } from "react-icons/fa6";
-import moment from "moment";
 import { summary } from "../assets/data";
-import clsx from "clsx";
 import Chart from "../components/Chart";
-import { PRIOTITYSTYELS, TASK_TYPE,getInitials } from '../utilities';
-import { BGS } from "../utilities";
 import UserInfo from "../components/UserInfo";
+import { BGS, PRIOTITYSTYELS, TASK_TYPE, getInitials } from '../utilities';
 
 
 
