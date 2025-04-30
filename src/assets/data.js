@@ -596,9 +596,21 @@ export const tasks = [
     date: "2025-02-09T00:00:00.000Z",
     priority: "high",
     stage: "todo",
-    assets: [
-      "https://firebasestorage.googleapis.com/v0/b/taskmanager-557d7.appspot.com/o/1707471138863original-a005132062ca5bafc505c4c74f0e1865.jpg?alt=media&token=55f909f2-7f05-42f3-af4f-dc7f87cdea1d",
-      "https://firebasestorage.googleapis.com/v0/b/taskmanager-557d7.appspot.com/o/1707471144712PsZch9E1_400x400.jpg?alt=media&token=7ce62c7e-c240-4032-83c6-bb6c9cdc0d4b",
+    relatedLinks: [
+      { title: "Project Documentation", url: "https://example.com/docs" },
+      { title: "Design Mockups", url: "https://example.com/mockups" },
+    ],
+    notes: [
+      {
+        title: "Initial Planning",
+        content: "Discussed the project requirements with the team.",
+        updatedAt: "2025-04-25T10:30:00Z",
+      },
+      {
+        title: "Design Phase",
+        content: "Completed the wireframes and mockups.",
+        updatedAt: "2025-04-26T14:15:00Z",
+      },
     ],
     team: [
       {

@@ -11,6 +11,7 @@ import TaskTitle from "../components/TaskTitle";
 import BoardView from '../components/BoardView';
 import { tasks } from "../assets/data";
 import Table from "../components/Task/Table";
+import AddTask from "../components/Task/AddTask";
 
 
 
@@ -47,6 +48,7 @@ const Tasks = () => {
           !status && (
             <div style={{ marginRight: '1rem' }} className='hidden md:flex'>
               <Button
+               onClick={() => setOpen(true)}
                 label="Create Task"
                 icon={<IoMdAdd className="text-lg" />}
                 className="flex flex-row-reverse gap-1 items-center bg-purple-700 hover:bg-purple-800 text-white rounded-full px-4 py-2 shadow-lg transition-all duration-300 mr-6 mt-4"
@@ -74,6 +76,7 @@ const Tasks = () => {
             </div>
           )}
         </Tabs>
+        <AddTask open={open} setOpen={setOpen}/>
       </div>
     </div>
   );

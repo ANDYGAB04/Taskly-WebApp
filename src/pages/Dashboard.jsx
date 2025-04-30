@@ -38,52 +38,52 @@ const TaskTable = ({ tasks }) => {
     <tr className='border-b border-gray-300 text-gray-600 hover:bg-gray-300/10'>
       <td className='py-2'>
         <div className='flex items-center gap-2'>
-          <div className={clsx("w-4 h-4 rounded-full",TASK_TYPE[task.stage])}/>
+          <div className={clsx("w-4 h-4 rounded-full", TASK_TYPE[task.stage])} />
           <p className='text-base text-black'>{task.title}</p>
         </div>
       </td>
       <td className='py-2'>
         <div className='flex items-center gap-1'>
-          <span className={clsx("text-lg",PRIOTITYSTYELS[task.priority])}>{ICONS[task.priority]} </span>
+          <span className={clsx("text-lg", PRIOTITYSTYELS[task.priority])}>{ICONS[task.priority]} </span>
           <span className='capitalize'>{task.priority}</span>
         </div>
       </td>
       <td className='py-2'>
-          <div className='flex'>
-            {task.team.map((m, index) => (
-              <div key={index} 
-              className={clsx("w-7 h-7 rounded-full text-white flex items-center justify-center text-sm -mr-1",BGS[index % BGS.length])}>
-             <UserInfo user={m}/>
-              </div>
-             )) }
-          </div>
+        <div className='flex'>
+          {task.team.map((m, index) => (
+            <div key={index}
+              className={clsx("w-7 h-7 rounded-full text-white flex items-center justify-center text-sm -mr-1", BGS[index % BGS.length])}>
+              <UserInfo user={m} />
+            </div>
+          ))}
+        </div>
 
-        </td>  
-        <td className='py-2 hidden md:block'>
-          <span className='text-sm text-gray-500'>
+      </td>
+      <td className='py-2 hidden md:block'>
+        <span className='text-sm text-gray-500'>
           {moment(task?.date).fromNow()}</span>
-        </td>
-        
+      </td>
+
     </tr>
 
 
 
   )
-  return(
+  return (
     <>
-    <div className='w-full md:w-2/3 bg-white px-2 md:px-4 pt-4 pb-4 shadow-md rounded'>
-    <table className='w-full'>
-      <TableHeader />
-      <tbody>
-        {tasks?.map((task, id) => (
-          <TableRow key={id} task={task}/>
-         ))  
-        }
-       </tbody>
-    </table>
+      <div className='w-full md:w-2/3 bg-white px-2 md:px-4 pt-4 pb-4 shadow-md rounded'>
+        <table className='w-full'>
+          <TableHeader />
+          <tbody>
+            {tasks?.map((task, id) => (
+              <TableRow key={id} task={task} />
+            ))
+            }
+          </tbody>
+        </table>
 
-    </div>
-    
+      </div>
+
     </>
   );
 };
@@ -97,11 +97,11 @@ const UserTable = ({ users }) => {
       </tr>
     </thead>
   );
-  const TableRow= ({ user }) => (
+  const TableRow = ({ user }) => (
     <tr className='border-b border-gray-200  text-gray-600 hover:bg-gray-400/10'>
       <td className='py-2'>
         <div className='flex items-center gap-3'>
-        <div className='w-9 h-9 rounded-full text-white flex items-center justify-center text-sm bg-violet-700'>
+          <div className='w-9 h-9 rounded-full text-white flex items-center justify-center text-sm bg-violet-700'>
             <span className='text-center'>{getInitials(user?.name)}</span>
           </div>
           <div>
@@ -109,7 +109,7 @@ const UserTable = ({ users }) => {
             <span className='text-xs text-black'>{user?.role}</span>
           </div>
 
-           
+
         </div>
 
       </td>
@@ -126,7 +126,7 @@ const UserTable = ({ users }) => {
       <td className='py-2 text-sm'>{moment(user?.createdAt).fromNow()}</td>
     </tr>
   )
-  return(
+  return (
     <div className='w-full md:w-1/3 bg-white h-fit px-2 md:px-6 py-4 shadow-md rounded'>
       <table className='w-full mb-5'>
         <TableHeader />
@@ -141,7 +141,7 @@ const UserTable = ({ users }) => {
 }
 
 const Dashboard = () => {
-  const totals=summary.tasks;
+  const totals = summary.tasks;
 
   const stats = [
     {
@@ -178,7 +178,7 @@ const Dashboard = () => {
     return (
       <div
         className={`w-full h-32 bg-white p-5 shadow-md rounded-md flex items-center justify-center ${bg}`}
-        style={{ marginLeft: '1rem',marginTop:'1rem' }} 
+        style={{ marginLeft: '1rem', marginTop: '1rem' }}
       >
         <div className="h-full flex flex-col items-center justify-center">
           <div className="text-4xl text-fuchsia-800 mb-2">{icon}</div>
@@ -204,7 +204,7 @@ const Dashboard = () => {
       </div>
       <div
         className='w-full bg-white my-16 p-4 rounded shadow-sm'
-        style={{ marginTop: '2rem', marginLeft: '1rem' }} 
+        style={{ marginTop: '2rem', marginLeft: '1rem' }}
       >
         <h4
           className='text-x1 text-gray-600 font-semibold'
@@ -216,13 +216,13 @@ const Dashboard = () => {
       </div>
       <div
         className='w-full flex flex-col md:flex-row gap-4 2xl:gap-10 py-8'
-        style={{ marginTop: '2rem', marginLeft: '1rem' }} 
+        style={{ marginTop: '2rem', marginLeft: '1rem' }}
       >
         {/*left */}
         <TaskTable tasks={summary.last10Task}></TaskTable>
 
         {/*right*/}
-        <UserTable users={summary.users}/>
+        <UserTable users={summary.users} />
 
       </div>
     </div>

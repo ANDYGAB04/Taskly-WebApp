@@ -13,6 +13,7 @@ import { BiMessageAltDetail } from "react-icons/bi";
 import { FaList } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 import UserInfo from "./UserInfo";
+import AddSubTask from "./Task/AddSubTask";
 
 
 const ICONS = {
@@ -98,17 +99,19 @@ const TaskCard = ({ task }) => {
                         </div>
                     </>
                 )}
-                <div className="w-full pb-2">
+                <div className="w-full pb-2" >
                     <button
                     disabled={user.isAdmin?false:true}
                     className="w-full flex gap-4 items-center text-sm text-gray-500 font-semibold disabled:cursor-not-allowed disabled::text-gray-300"
-                    style={{ marginTop: '1rem' }}
+                    style={{ marginTop: '1rem',marginBottom: '1rem' }}
+                    onClick={() => setOpen(true)}
                     >
                         <IoMdAdd className='text-lg' />
                         <span>ADD SUBTASK</span>
                     </button>
                 </div>
             </div>
+            <AddSubTask open={open} setOpen={setOpen} id={task._id}/>
         </>
     )
 }

@@ -12,6 +12,8 @@ import clsx from "clsx";
 import { FaList } from "react-icons/fa";
 import UserInfo from "../UserInfo";
 import Button from "../Button";
+import { set } from "react-hook-form";
+import ConfirmationDialog from "../ConfirmationDialog";
 
 const ICONS = {
     high: <MdKeyboardDoubleArrowUp />,
@@ -23,7 +25,11 @@ const Table = ({ tasks }) => { // Destructure tasks from props
     const [openDialog, setOpenDialog] = useState(false);
     const [selected, setSelected] = useState(null);
 
-    const deleteClicks = () => { }
+    const deleteClicks = (id) => { 
+        setSelected(id);
+        setOpenDialog(true);
+    }
+    const deleteHandler = () => {}
 
     const TableHeader = () => (
         <thead className='w-full border-b border-gray-300'>
@@ -126,11 +132,11 @@ const Table = ({ tasks }) => { // Destructure tasks from props
                     </table>
                 </div>
             </div>
-            {/*<ConfirmatioDialog
+            <ConfirmationDialog
                 open={openDialog}
                 setOpen={setOpenDialog}
                 onClick={deleteHandler}
-            /*/}
+            />
         </>
     );
 };
