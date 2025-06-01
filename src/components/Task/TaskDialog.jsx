@@ -14,6 +14,7 @@ import AddTask from "./AddTask";
 import TaskColor from "./TaskColor";
 import { useSelector } from "react-redux";
 import ConfirmationDialog from "../ConfirmationDialog";
+import { useDuplicateTaskMutation, useTrashTastMutation } from "../../redux/slices/api/taskApiSlice";
 
 
 
@@ -25,9 +26,46 @@ const TaskDialog = ({task}) => {
 
   const navigate = useNavigate();
 
-  const duplicateHanlder = () => {}
-  const deleteHandler=() => {}
-  const deleteClicks = () => {}
+  const [deleteTask] = useTrashTastMutation();
+  const [duplicateTask] = useDuplicateTaskMutation();
+
+  const duplicateHandlder =async() => {
+    try {
+      const res = await duplicateTask(task._id).unwrap();
+
+      toast.success(res?.message);
+
+      setTimeout(() => {
+        setOpenDialog(false);
+        window.location.reload();
+      }, 500);
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error);
+    }
+
+  }
+  const deleteHandler=async() => {
+    try {
+      const res = await deleteTask({
+        id: task._id,
+        isTrashed: "trash",
+      }).unwrap();
+
+      toast.success(res?.message);
+
+      setTimeout(() => {
+        setOpenDialog(false);
+        window.location.reload();
+      }, 500);
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error);
+    }
+  }
+  const deleteClicks = () => {
+    setOpenDialog(true);
+  }
 
   const items = [
     {
@@ -37,7 +75,7 @@ const TaskDialog = ({task}) => {
     },
     {
       label: "Edit",
-      icon: <MdOutlineEdit className='mr-2 h-5 w-5' aria-hidden='true' />,
+      icon: <MdOutlineEdit className='mr-2 h-5 w-5' aria-hidden='true' />, // Ensure no unintended accessibility attributes
       onClick: () => setOpenEdit(true),
     },
     {
@@ -48,7 +86,7 @@ const TaskDialog = ({task}) => {
     {
       label: "Duplicate",
       icon: <HiDuplicate className='mr-2 h-5 w-5' aria-hidden='true' />,
-      onClick: () => duplicateHanlder(),
+      onClick: () => duplicateHandlder(),
     },
   ];
 
@@ -57,7 +95,7 @@ const TaskDialog = ({task}) => {
     <>
     <div className=''>
       <Menu as='div' className='relative inline-block text-left'>
-        <Menu.Button className='inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300'
+        <Menu.Button className='inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 cursor-pointer'
           style={{ marginTop: '0.5rem', marginRight: '1rem' }}
         >
           <BsThreeDots />
@@ -73,7 +111,7 @@ const TaskDialog = ({task}) => {
           leaveTo='transform opacity-0 scale-95'
         >
 
-          <Menu.Items className='absolute p-4 left-0 mt-2 w-40 divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none'>
+          <Menu.Items className='absolute p-4 right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none'>
             <div className='px-1 py-1 space-y-2'>
               {items.map((el, index) => (
                 <Menu.Item key={el.label}>
@@ -82,7 +120,7 @@ const TaskDialog = ({task}) => {
                       disabled={index === 0 ? false : !user.isAdmin}
                       onClick={el?.onClick}
                       className={`${active ? "bg-fuchsia-600 text-white" : "text-gray-900"
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm disabled:text-gray-400`}
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm disabled:text-gray-400 cursor-pointer`}
                       style={{ marginTop: '1rem', marginBottom: '1rem' }}
                     >
                       {el.icon}
@@ -99,12 +137,13 @@ const TaskDialog = ({task}) => {
                     disabled={!user.isAdmin}
                     onClick={() => deleteClicks()}
                     className={`${active ? "bg-red-100 text-red-900" : "text-red-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm disabled:text-gray-400`}
+                      } group flex w-full items-center rounded-md px-2 py-2 text-sm disabled:text-gray-400 cursor-pointer`}
                       style={{ marginBottom: '1rem' }}
+                      aria-hidden="true" // Ensure no unintended accessibility attributes
                   >
                     <RiDeleteBin6Line
                       className='mr-2 h-5 w-5 text-red-600'
-                      aria-hidden='true'
+                      aria-hidden="true" // Ensure no unintended accessibility attributes
                     />
                     Delete
                   </button>

@@ -1,14 +1,14 @@
-
 import React, { useState } from 'react'
 import Title from "../components/Title";
 import Button from "../components/Button";
 import { IoMdAdd } from "react-icons/io";
-import { summary } from "../assets/data";
 import { getInitials } from "../utilities";
 import clsx from "clsx";
 import AddUser from "../components/AddUser";
 import ConfirmationDialog from "../components/ConfirmationDialog";
-import UserAction from "../components/ConfirmationDialog";
+import { UserAction } from "../components/ConfirmationDialog";
+import { useDeleteUserMutation, useGetTeamListQuery, useUserActionMutation } from '../redux/slices/api/userApiSlice';
+import { toast } from 'sonner';
 
 
 const Users = () => {
@@ -17,8 +17,11 @@ const Users = () => {
   const [openAction, setOpenAction] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  const userActionHandler=()=> {}
-  const deleteHandler=()=> {}
+
+  const { data, isLoading, refetch } = useGetTeamListQuery()
+  const [deleteUser] = useDeleteUserMutation()
+  const [userAction] = useUserActionMutation()
+
   const deleteClick = (id) => {
     setSelected(id);
     setOpenDialog(true);
@@ -27,6 +30,47 @@ const Users = () => {
   const editClick = (el) => {
     setSelected(el);
     setOpen(true);
+  };
+
+  const userStatusClick = (el) => {
+    setSelected(el);
+    setOpenAction(true);
+  };
+
+
+const deleteHandler = async () => {
+    try {
+      const res = await deleteUser(selected);
+
+      refetch();
+      toast.success(res?.data?.message);
+      setSelected(null);
+      setTimeout(() => {
+        setOpenDialog(false);
+      }, 500);
+    } catch (error) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
+  const userActionHandler = async () => {
+    try {
+      const res = await userAction({
+        isActive: !selected?.isActive,
+        id: selected?._id,
+      });
+
+      refetch();
+      toast.success(res?.data?.message);
+      setSelected(null);
+      setTimeout(() => {
+        setOpenAction(false);
+      }, 500);
+    } catch (error) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error);
+    }
   };
 
   const TableHeader = () => (
@@ -45,7 +89,7 @@ const Users = () => {
     <tr className='border-b border-gray-200 text-gray-600 hover:bg-gray-400/10'>
       <td className='p-2'>
         <div className='flex items-center gap-3'>
-          <div className='w-9 h-9 rounded-full text-white flex items-center justify-center text-sm bg-violet-700'>
+          <div className='w-9 h-9 rounded-full text-white flex items-center justify-center text-sm bg-violet-700' style={{ marginLeft: '1rem' }}>
             <span className='text-xs md:text-sm text-center'>
               {getInitials(user.name)}
             </span>
@@ -55,22 +99,22 @@ const Users = () => {
       </td>
 
       <td className='p-2'>{user.title}</td>
-      <td className='p-2'>{user.email || "user.emal.com"}</td>
+      <td className='p-2'>{user.email }</td>
       <td className='p-2'>{user.role}</td>
 
       <td>
         <button
-          // onClick={() => userStatusClick(user)}
+          onClick={() => userStatusClick(user)}
           className={clsx(
             "w-fit px-4 py-1 rounded-full",
-            user?.isActive ? "bg-fuchsia-400" : "bg-pink-200"
+            user?.isActive ? "bg-fuchsia-500" : "bg-pink-200"
           )}
         >
           {user?.isActive ? "Active" : "Disabled"}
         </button>
       </td>
 
-      <td className='p-2 flex gap-4 justify-end'>
+      <td className='p-2 flex gap-4 justify-end' style={{ marginRight: '1rem', marginTop: '0.4rem' }}>
         <Button
           className='text-fuchsia-600 hover:text-fuchsia-500 font-semibold sm:px-0'
           label='Edit'
@@ -91,7 +135,7 @@ const Users = () => {
   return (
     <>
       <div className=' w-full md:px-1 px-0 mb-6' style={{ marginTop: '1.2rem' }}>
-        <div className='flex items-center justify-between mb-8' style={{ marginLeft: '1.2rem',marginRight: '1.2rem' }}>
+        <div className='flex items-center justify-between mb-8' style={{ marginLeft: '1.2rem', marginRight: '1.2rem' }}>
           <Title title='  Team Members' />
           <Button
             label='Add New User'
@@ -100,12 +144,12 @@ const Users = () => {
             onClick={() => setOpen(true)}
           />
         </div>
-        <div className='bg-white px-2 md:px-4 py-4 shadow-md rounded' style={{ marginLeft: '1rem', marginRight: '1rem',marginTop: '1rem' }}>
+        <div className='bg-white px-2 md:px-4 py-4 shadow-md rounded' style={{ marginLeft: '1rem', marginRight: '1rem', marginTop: '1rem' }}>
           <div className='overflow-x-auto'>
             <table className='w-full mb-5'>
               <TableHeader />
               <tbody>
-                {summary.users?.map((user, index) => (
+                {data?.map((user, index) => (
                   <TableRow key={index} user={user} />
                 ))}
               </tbody>

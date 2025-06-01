@@ -8,27 +8,95 @@ import { useState, React } from 'react'
 import SelectList from '../SelectList'
 import { BiImages } from "react-icons/bi";
 import Button from '../Button'
+import {
+    getDownloadURL,
+    getStorage,
+    ref,
+    uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../../utilities/firebase";
+import { useCreateTaskMutation, useUpdateTaskMutation } from '../../redux/slices/api/taskApiSlice'
+import { dateFormatter } from "../../utilities";
+import { toast } from "sonner";
+import { useSelector } from 'react-redux'
+
 
 const LISTS = ["TODO", "IN PROGRESS", "COMPLETED"];
 const PRIORIRY = ["HIGH", "MEDIUM", "NORMAL", "LOW"];
 
 const uploadedFileURLs = [];
+const uploadFile = async (file) => {
+};
 
-const AddTask = ({ open, setOpen }) => {
-    const task = ""
-    const { register, handleSubmit, formState: { errors } } = useForm()
-    const submitHandler = () => { }
-    const [team, setTeam] = useState(task?.team || []);
+const AddTask = ({ open, setOpen, task }) => {
+    const defaultValues = {
+        title: task?.title || "",
+        date: dateFormatter(task?.date || new Date()),
+        team: [],
+        stage: "",
+        priority: "",
+        assets: [],
+        description: "",
+        links: "",
+    };
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({ defaultValues });
     const [stage, setStage] = useState(task?.stage?.toUpperCase() || LISTS[0]);
+    const [team, setTeam] = useState(task?.team || []);
     const [priority, setPriority] = useState(
         task?.priority?.toUpperCase() || PRIORIRY[2]
     );
-    const handleSelect = (e) => {
-        setSelectedFiles(e.target.files)
-
-    }
     const [assets, setAssets] = useState([])
     const [uploading, setUploading] = useState(false)
+
+    const [createTask, { isLoading }] = useCreateTaskMutation();
+    const [updateTask, { isLoading: isUpdating }] = useUpdateTaskMutation();
+    const URLS = task?.assets ? [...task.assets] : [];
+
+    const handleSelect = (e) => {
+        setAssets(e.target.files)
+
+    }
+    const submitHandler = async (data) => {
+        for (const file of assets) {
+            setUploading(true);
+            try {
+                await uploadFile(file);
+            } catch (error) {
+                console.error("Error uploading file:", error.message);
+                return;
+            } finally {
+                setUploading(false);
+            }
+        }
+        try {
+            const newData = {
+                ...data,
+                assets: [...URLS, ...uploadedFileURLs],
+                team,
+                stage,
+                priority,
+            };
+            console.log(data, newData);
+            const res = task?._id
+                ? await updateTask({ ...newData, _id: task._id }).unwrap()
+                : await createTask(newData).unwrap();
+
+            toast.success(res.message);
+
+            setTimeout(() => {
+                setOpen(false);
+            }, 500);
+        } catch (err) {
+            console.log(err);
+            toast.error(err?.data?.message || err.error);
+        }
+
+    }
+
 
     return (
         <>
@@ -37,11 +105,11 @@ const AddTask = ({ open, setOpen }) => {
                     <Dialog.Title
                         as='h2'
                         className='text-base font-bold leading-6 text-fuchsia-800 mb-4'
-                        style={{marginTop:'1rem',marginLeft:"1rem"}}
+                        style={{ marginTop: '1rem', marginLeft: "1rem" }}
                     >
                         {task ? "UPDATE TASK" : "ADD TASK"}
                     </Dialog.Title>
-                    <div className='mt-2 flex flex-col gap-6' style={{ marginLeft: '1rem',marginRight: '1rem',marginTop: '1rem',marginBottom: '1rem' }}>
+                    <div className='mt-2 flex flex-col gap-6' style={{ marginLeft: '1rem', marginRight: '1rem', marginTop: '1rem', marginBottom: '1rem' }}>
                         <Textbox
                             placeholder="Task Title"
                             type="text"
@@ -106,7 +174,7 @@ const AddTask = ({ open, setOpen }) => {
                         </div>
                         <div className='bg-gray-50 mt-6 mb-4 sm:flex sm:flex-row-reverse gap-4'>
                             {uploading ? (
-                                <span classname=" text-sm py-2 text-red-500">
+                                <span className=" text-sm py-2 text-red-500">
                                     Uploading assets
                                 </span>
                             ) : (

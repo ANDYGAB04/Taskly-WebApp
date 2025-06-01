@@ -80,22 +80,24 @@ export function UserAction({ open, setOpen, onClick = () => {} }) {
   return (
     <>
       <ModalWrapper open={open} setOpen={closeDialog}>
-        <div className="py-4 w-full flex flex-col gap-4 items-center justify-center">
-          <Dialog.Title as="h3" className="">
+        <div className='py-4 w-full flex flex-col gap-4 items-center justify-center' style={{ marginTop: "3rem", marginBottom: "3rem" }}>
+          <Dialog.Title as='h3' className=''>
             <p className={clsx("p-3 rounded-full ", "text-red-600 bg-red-200")}>
               <FaQuestion size={60} />
             </p>
           </Dialog.Title>
 
-          <p className="text-center text-gray-500">
+          <p className='text-center text-gray-500'>
             {"Are you sure you want to activate or deactive this account?"}
           </p>
 
-          <div className="bg-gray-50 py-3 sm:flex sm:flex-row-reverse gap-4">
+          <div className='bg-gray-50 py-3 sm:flex sm:flex-row-reverse gap-4'
+          style={{ marginTop: "1rem" ,marginLeft: "1rem", marginRight: "1rem" }}
+          >
             <Button
-              type="button"
+              type='button'
               className={clsx(
-                " px-8 text-sm font-semibold text-white sm:w-auto",
+                " px-16 py-4 text-lg font-semibold text-white rounded-lg shadow-md transition-all duration-300 sm:w-auto",
                 "bg-red-600 hover:bg-red-500"
               )}
               onClick={onClick}
@@ -103,10 +105,10 @@ export function UserAction({ open, setOpen, onClick = () => {} }) {
             />
 
             <Button
-              type="button"
-              className="bg-white px-8 text-sm font-semibold text-gray-900 sm:w-auto border"
+              type='button'
+              className='bg-white px-16 py-4 text-lg font-semibold text-gray-900 border border-gray-300 rounded-lg shadow-md hover:bg-gray-100 transition-all duration-300 sm:w-auto'
               onClick={() => closeDialog()}
-              label="No"
+              label='No'
             />
           </div>
         </div>

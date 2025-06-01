@@ -21,15 +21,15 @@ const ICONS = {
     low: <MdKeyboardArrowDown />,
 };
 
-const Table = ({ tasks }) => { // Destructure tasks from props
+const Table = ({ tasks }) => {
     const [openDialog, setOpenDialog] = useState(false);
     const [selected, setSelected] = useState(null);
 
-    const deleteClicks = (id) => { 
+    const deleteClicks = (id) => {
         setSelected(id);
         setOpenDialog(true);
     }
-    const deleteHandler = () => {}
+    const deleteHandler = () => { }
 
     const TableHeader = () => (
         <thead className='w-full border-b border-gray-300'>
@@ -101,7 +101,9 @@ const Table = ({ tasks }) => { // Destructure tasks from props
                     ))}
                 </div>
             </td>
-            <td className='py-2 flex gap-2 md:gap-4 justify-end'>
+            <td className='py-2 flex gap-2 md:gap-4 justify-end'
+                style={{ marginRight: '1rem' }}
+            >
                 <Button
                     className='text-fuchsia-800 hover:fuchsia-700 sm:px-0 text-sm md:text-base'
                     label='Edit'
@@ -113,6 +115,7 @@ const Table = ({ tasks }) => { // Destructure tasks from props
                     label='Delete'
                     type='button'
                     onClick={() => deleteClicks(task._id)}
+
                 />
             </td>
         </tr >

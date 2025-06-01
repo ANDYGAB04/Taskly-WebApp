@@ -6,6 +6,10 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getInitials } from "../utilities"; 
+import { useLogoutMutation } from "../redux/slices/api/authApiSlice";
+import { logout } from "../redux/slices/authSlice";
+import ChangePassword from "./ChangePassword";
+import AddUser from "./AddUser";
 
 
 const UserAvatar = () => {
@@ -14,16 +18,25 @@ const UserAvatar = () => {
     const { user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    
-    const logouthandler = () => {
-        console.log("Logout");
+    const [logoutUser]= useLogoutMutation();
+    const logouthandler = async() => {
+        try{
+          await logoutUser().unwrap();
+          dispatch(logout());
+
+          navigate("/log-in",)
+
+
+        }catch(err){
+            console.log(err);
+        }
     }
   
   return (
       <>
        <div>
         <Menu as="div" className="relative inline-block text-left">
-             <div>
+             <div style={{ marginTop: '0.5rem', marginRight: '0.5rem', marginLeft: '0.5rem',marginBottom: '0.5rem' }}>
                 <MenuButton className='w-10 h-10 2xl:w-12 2xl:h-12 items-center justify-center rounded-full bg-fuchsia-800'>
                     <span className="ml-2 text-white font-semibold">{getInitials(user?.name)}</span>
                 </MenuButton>
@@ -40,7 +53,7 @@ const UserAvatar = () => {
                  <MenuItems className='absolute right-0 mt-2 w-56 origin-top-right divide-gray-100 rounded-md bg-white shadow-2xl ring-1 ring-black/5 focus:outline-none  '>
              
                     <div className="p-4">
-                        <MenuItems>
+                        <Menu.Item>
                           {({active}) => (
                             <button onClick={()=> setOpen(true)}
                             className="text-gray-700 group flex w-full items-center rounded-md px-2 py-2 text-base"
@@ -50,10 +63,10 @@ const UserAvatar = () => {
                             </button>
                         )}
                         
-                        </MenuItems>
-                        <MenuItems>
+                        </Menu.Item>
+                        <Menu.Item>
                           {({active}) => (
-                            <button onClick={()=> setOpenPassWord(true)}
+                            <button onClick={()=> setOpenPassword(true)}
                             className="text-gray-700 dark:text-gray-300 group flex w-full items-center rounded-md px-2 py-2 text-base"
                             >
                             <FaUserLock className='mr-2' aria-hidden='true' />
@@ -61,8 +74,8 @@ const UserAvatar = () => {
                             </button>
                         )}
                         
-                        </MenuItems>
-                        <MenuItems>
+                        </Menu.Item>
+                        <Menu.Item>
                           {({active}) => (
                             <button onClick={logouthandler}
                             className="text-red-600  group flex w-full items-center rounded-md px-2 py-2 text-base"
@@ -72,7 +85,7 @@ const UserAvatar = () => {
                             </button>
                         )}
                         
-                        </MenuItems>
+                        </Menu.Item>
 
                     </div>
 
@@ -81,6 +94,9 @@ const UserAvatar = () => {
 
         </Menu>
        </div>
+       <AddUser open={open} setOpen={setOpen} userData={user} />
+      <ChangePassword open={openPassword} setOpen={setOpenPassword} />
+
       </>
   )
 }

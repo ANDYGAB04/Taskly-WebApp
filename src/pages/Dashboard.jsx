@@ -9,11 +9,26 @@ import {
   MdKeyboardArrowUp,
   MdKeyboardDoubleArrowUp,
 } from "react-icons/md";
-import { summary } from "../assets/data";
-import Chart from "../components/Chart";
+import { Chart } from "../components/Chart";
+import Loading from "../components/Loader";
 import UserInfo from "../components/UserInfo";
+import { useGetDasboardStatsQuery } from "../redux/slices/api/taskApiSlice";
 import { BGS, PRIOTITYSTYELS, TASK_TYPE, getInitials } from '../utilities';
 
+const Card = ({ label, count, icon, bg }) => {
+  return (
+    <div
+      className={`w-full h-32 bg-white p-5 shadow-md rounded-md flex items-center justify-center ${bg}`}
+      style={{ marginLeft: '1rem', marginTop: '1rem' }}
+    >
+      <div className="h-full flex flex-col items-center justify-center">
+        <div className="text-4xl text-fuchsia-800 mb-2">{icon}</div>
+        <p className="text-base text-gray-800 font-semibold">{label}</p>
+        <p className="text-lg text-fuchsia-800 font-bold">{count}</p>
+      </div>
+    </div>
+  );
+};
 
 
 const TaskTable = ({ tasks }) => {
@@ -117,7 +132,7 @@ const UserTable = ({ users }) => {
         <p
           className={clsx(
             "w-fit px-3 py-1 rounded-full text-sm",
-            user?.isActive ? "bg-fuchsia-400" : "bg-pink-200"
+            user?.isActive ? "bg-fuchsia-500" : "bg-pink-200"
           )}
         >
           {user?.isActive ? "Active" : "Disabled"}
@@ -141,13 +156,22 @@ const UserTable = ({ users }) => {
 }
 
 const Dashboard = () => {
-  const totals = summary.tasks;
+  const { data, isLoading } = useGetDasboardStatsQuery();
+  console.log(data);
+
+  if (isLoading)
+    return (
+      <div className='py-10'>
+        <Loading />
+      </div>
+    );
+  const totals = data?.tasks || [];
 
   const stats = [
     {
       _id: "1",
       label: "TOTAL TASK",
-      total: summary?.totalTasks || 0,
+      total: data?.totalTasks || 0,
       icon: <FaNewspaper />,
       bg: "bg-[#1d4ed8]",
     },
@@ -174,23 +198,9 @@ const Dashboard = () => {
     },
   ];
 
-  const Card = ({ label, count, icon, bg }) => {
-    return (
-      <div
-        className={`w-full h-32 bg-white p-5 shadow-md rounded-md flex items-center justify-center ${bg}`}
-        style={{ marginLeft: '1rem', marginTop: '1rem' }}
-      >
-        <div className="h-full flex flex-col items-center justify-center">
-          <div className="text-4xl text-fuchsia-800 mb-2">{icon}</div>
-          <p className="text-base text-gray-800 font-semibold">{label}</p>
-          <p className="text-lg text-fuchsia-800 font-bold">{count}</p>
-        </div>
-      </div>
-    );
-  };
 
   return (
-    <div className='h-full py-4 pl-4'>
+    <div className='h-full py-4 '>
       <div className='grid grid-cols-1 md:grid-cols-4 gap-5'>
         {stats.map(({ icon, bg, label, total }, index) => (
           <Card
@@ -212,17 +222,17 @@ const Dashboard = () => {
         >
           Charts by Priority
         </h4>
-        <Chart />
+        <Chart data={data?.graphData} />
       </div>
       <div
         className='w-full flex flex-col md:flex-row gap-4 2xl:gap-10 py-8'
         style={{ marginTop: '2rem', marginLeft: '1rem' }}
       >
         {/*left */}
-        <TaskTable tasks={summary.last10Task}></TaskTable>
+        <TaskTable tasks={data?.last10Task}></TaskTable>
 
         {/*right*/}
-        <UserTable users={summary.users} />
+        <UserTable users={data?.users} />
 
       </div>
     </div>
