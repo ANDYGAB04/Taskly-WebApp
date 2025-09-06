@@ -1,12 +1,17 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🚀 Taskly – Stay on Track, Together
 
-Currently, two official plugins are available:
+Taskly is a sleek, full-stack task management web app designed for small teams who want to stay organized without the clutter.
+Built with React + Tailwind on the frontend and JavaScript + MongoDB on the backend, Taskly combines speed, simplicity, and teamwork into one seamless platform.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+✨ Key Highlights
 
-## Expanding the ESLint configuration
+📝 Create and manage tasks with ease
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+👥 Assign work and track progress as a team
+
+⚡ Fast, responsive UI powered by React + Tailwind
+
+💾 Reliable backend with MongoDB for data persistence
+
+🌐 Full-stack JavaScript – one language, front to back
