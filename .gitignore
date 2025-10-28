@@ -1,4 +1,10 @@
 # Logs
+
+.env
+.env.local
+.env.*.local
+.env.test.local
+
 logs
 *.log
 npm-debug.log*
@@ -6,11 +12,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
-.env
-.env.local
-.env.*.local
-.env.test.local
 
 node_modules
 dist
